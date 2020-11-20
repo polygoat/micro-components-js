@@ -1,6 +1,16 @@
 Micro Pipeline: Components
 ==========================
 
+## Installation
+
+In your terminal run:
+
+```bash
+npm i micro-components
+```
+
+## Usage
+
 ## Creation from CLI
 You can use the `micro-pipeline` CLI to create a component like so:
 
@@ -9,10 +19,6 @@ You can use the `micro-pipeline` CLI to create a component like so:
 micro-pipeline create component "My Component" node
 ```
 
-**For Python:**
-```bash
-micro-pipeline create component "My Component" python
-```
 
 This will create a skeleton component file in either the path provided in a config or default to `./services/components`.
 
@@ -28,29 +34,12 @@ const SomeComponent = Component({
 });
 ```
 
-**Python:**
-```python
-import os
-import sys
-
-ROOT_DIR = os.getcwd()
-sys.path.insert(0, ROOT_DIR)
-
-from utils.classes.Component import Component
-
-class SomeComponent(Component):
-	name: 'some_component'
-```
 
 Class names follow usual conventions of StarCase.
 
 **Javascript:**
 ```javascript
 const { IntentMatcher } = require('./services/components/intent_matcher');
-```
-**Python:**
-```python
-from services.components.language_manager import LanguageManager
 ```
 
 ## Exporting
@@ -64,7 +53,7 @@ In Python, you can use them as-is.
 ### As CLI
 To turn a component into a CLI, use the command `export_as_cli`:
 
-**Javascript / Python:**
+**Javascript:**
 ```javascript
 SomeComponent.export_as_cli()
 ```
@@ -72,28 +61,23 @@ SomeComponent.export_as_cli()
 ## Manual Creation
 If you create your component by hand, make sure your file is executable by adding a Shebang at the top of it…
 
-**Javascript:**
 ```javascript
 #!/usr/bin/env node
 ```
-**Python:**
-```python
-#!/usr/bin/env python3
-```
 
-…and by giving it execution permissions (**bash**)…
+…and by giving it execution permissions (in your **terminal**)…
 ```bash
 chmod +x ./services/components/some_component.py
 ```
 
 …to then run the methods:
 ```bash
-./services/components/some_component.py fetch_data "parameter" 15 "{ \"sub-param\": \"value\" }"
+./services/components/some_component.js fetch_data "parameter" 15 "{ \"sub-param\": \"value\" }"
 ```
 
 The Component class will automagically look at the parameter defaults of your service's methods and try to parse parameters passed through the CLI accordingly. 
 
-Consider the following example component (**Javascript**):
+Consider the following example component:
 ```javascript
 const RecipeFetcher = new Component({
 	name: 'recipe_fetcher',
