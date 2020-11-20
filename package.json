@@ -1,0 +1,25 @@
+{
+  "name": "micro-components",
+  "version": "0.1.0",
+  "description": "Lightweight library to create components that can automagically be used as either CLI or classes in other programming languages",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/polygoat/micro-components-js.git"
+  },
+  "keywords": [
+    "components",
+    "runnable",
+    "cli",
+    "encapsulated"
+  ],
+  "author": "Dan Borufka",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/polygoat/micro-components-js/issues"
+  },
+  "homepage": "https://github.com/polygoat/micro-components-js#readme"
+}
