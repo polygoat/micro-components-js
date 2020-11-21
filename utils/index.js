@@ -1,6 +1,6 @@
-const { TERMINAL_FORMATS } = require('./console');
+require('colors');
 
 const _error = console.error;
-console.success = (...args) => console.log(TERMINAL_FORMATS.SUCCESS, ...args, TERMINAL_FORMATS.RESET);
-console.error = (...args) => _error(TERMINAL_FORMATS.FAIL, ...args, TERMINAL_FORMATS.RESET);
+console.success = (...args) => console.log(args.join(' ').green);
+console.error = (...args) => _error(args.join(' ').red);
 console.respond = what => console.log(JSON.stringify(what, null, 4));

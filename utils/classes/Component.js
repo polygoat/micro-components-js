@@ -4,20 +4,13 @@ const _ = require('lodash');
 const path = require('path');
 
 require('../');
-require('../console');
-require('../formats');
-
 const { Cache } = require('./Cache');
-const { Config } = require('./Config');
 const { Hookable } = require('./Hookable');
 
 const { as_json } = require('../jsons');
-const { run } = require('../run');
-const { inspect_function, named_args_as_positional } = require('../funcs');
-const { TERMINAL_FORMATS } = require('../console');
+const { shell_run } = require('../shell');
 const { string_to_any } = require('../formats');
-
-const CONFIG = new Config().load();
+const { inspect_function, named_args_as_positional } = require('../funcs');
 
 const ENGINES = {
 	py:   'python',
@@ -37,32 +30,27 @@ class Component extends Hookable {
 
 	constructor(options, extras=undefined) {
 		super();
-		if(_.isString(options)) {
-			const proxy = new ComponentCLI(options, extras);
-			this.proxy = proxy;
-			return proxy;
-		} else {
-			this.init(options);
-			Component.registered.push(this);
 
-			if(this.is_cached) {
-				if(!this.cached_methods) {
-					this.cached_methods = _.filter(Object.getOwnPropertyNames(this), prop => !prop.startsWith('__') && _.isFunction(this[prop]));
-				}
+		this.init(options);
+		Component.registered.push(this);
+
+		if(this.is_cached) {
+			if(!this.cached_methods) {
+				this.cached_methods = _.filter(Object.getOwnPropertyNames(this), prop => !prop.startsWith('__') && _.isFunction(this[prop]));
 			}
-
-			if(this.cached_methods) {
-				this.init_cache();
-				_.each(this.cached_methods, this.cache_method.bind(this));
-			}
-
-			if(CONFIG.RUN_COMPONENTS_AS_CLI) {
-				process.on('exit', () => this.export_as_cli());
-			}
-
-			Component.trigger('spawn', [this]);
-			return this.trigger('spawn', [this], this);
 		}
+
+		if(this.cached_methods) {
+			this.init_cache();
+			_.each(this.cached_methods, this.cache_method.bind(this));
+		}
+
+		Component.trigger('spawn', [this]);
+		return this.trigger('spawn', [this], this);
+	}
+
+	static from_cli(path, extras=undefined) {
+		return new ComponentCLI(path, extras);
 	}
 
 	async init(options) {
@@ -129,7 +117,8 @@ class Component extends Hookable {
 						if(_.isUndefined(param.defaultValue)) {
 							return param.parameter;
 						}
-						return `${param.parameter}=${param.defaultValue}`;
+						//return `${param.parameter}=${param.defaultValue}`;
+						return param.parameter + `=${param.defaultValue}`.grey;
 					});
 					entry['params'] = params.join(', ');
 					callables.push(entry);
@@ -144,20 +133,20 @@ class Component extends Hookable {
 			}
 		});
 
-		console.log(` ${TERMINAL_FORMATS.BOLD}${_.startCase(this.name)} Component${TERMINAL_FORMATS.RESET}`);
+		console.log(` ${_.startCase(this.name)} Component`.bold);
 		if(this.description) {
 			console.log(' ' + this.description + '\n');
 		}
 
 		if(callables.length) {
-			console.log(`\t${TERMINAL_FORMATS.UNDERLINE}Available methods:${TERMINAL_FORMATS.RESET}\n`);
-			_.map(callables, method => console.log(`\t\t.${method.name}(${method.params})`));
+			console.log('\t' + 'Available methods:'.underline + '\n');
+			_.map(callables, method => console.log(`\t\t.${method.name}`+ '('.yellow + method.params + ')'.yellow));
 		}
 
 		if(props.length) {
 			const indent = prop => prop.replace(/\n/g, '\n\t\t');
-			console.log(`\n\t${TERMINAL_FORMATS.UNDERLINE}Available properties:${TERMINAL_FORMATS.RESET}\n`);
-			_.map(props, prop => console.log(`\t\t.${prop.name} (default ${indent(prop.value)})`));
+			console.log('\n\t' + 'Available properties:'.underline + '\n');
+			_.map(props, prop => console.log(`\t\t.${prop.name} ` + `(default ${indent(prop.value)})`.grey));
 		}
 	}
 
@@ -265,13 +254,12 @@ class Component extends Hookable {
 		return this;
 	}
 
-	export_as_module() {
+	export_as(module) {
 		module.export[this.name] = this;
 		return this;
 	}
 
 	export() {
-		// check configs for CLI export
 		this.export_as_cli();
 		this.export_as_module();
 	}
@@ -306,9 +294,9 @@ class ComponentCLIProp extends Function {
 		const command = [`./${this.parent.path}`, this.prop_name, ...params];
 
 		if(this.parent.is_cached) {
-			return this.parent.cache.fetch(command, () => run(command));
+			return this.parent.cache.fetch(command, () => shell_run(command));
 		}
-		return run(command);
+		return shell_run(command);
 	}
 }
 
@@ -333,10 +321,6 @@ class ComponentCLI extends Hookable {
 
 	init(options) {
 		this.__component.init(options);
-	}
-
-	from_cli() {
-		return this;
 	}
 
 	get(self, name) {
