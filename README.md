@@ -12,15 +12,14 @@ npm i micro-components
 ## Usage
 
 ## Creation from CLI
-You can use the `micro-pipeline` CLI to create a component like so:
+You can use the `micro-component` CLI to create a component like so:
 
 **For Javascript:**
 ```bash
-micro-pipeline create component "My Component" node
+micro-pipeline create "My Component" node
 ```
 
-
-This will create a skeleton component file in either the path provided in a config or default to `./services/components`.
+This will create a skeleton component file in your current directory.
 
 ## Naming Convention
 Components have a snake_cased filename and hold the same name as a property at minimum:
@@ -39,23 +38,22 @@ Class names follow usual conventions of StarCase.
 
 **Javascript:**
 ```javascript
-const { IntentMatcher } = require('./services/components/intent_matcher');
+const { IntentMatcher } = require('./components/intent_matcher');
 ```
 
 ## Exporting
-You can either import services as modules "inline" or call their methods from the command line.
+You can use one of two export methods to either import components as modules "inline" or call their methods from the command line.
 
 ### As Modules
-To turn a component into a requirable module in NodeJS, use the common object denotation:
-`module.exports = { SomeComponent };`
-In Python, you can use them as-is.
+To turn a component into a requirable module in NodeJS, use:
+`SomeComponent.export_as(module);`
 
 ### As CLI
 To turn a component into a CLI, use the command `export_as_cli`:
 
 **Javascript:**
 ```javascript
-SomeComponent.export_as_cli()
+SomeComponent.export_as_cli();
 ```
 
 ## Manual Creation
@@ -67,15 +65,15 @@ If you create your component by hand, make sure your file is executable by addin
 
 …and by giving it execution permissions (in your **terminal**)…
 ```bash
-chmod +x ./services/components/some_component.py
+chmod +x ./components/some_component.py
 ```
 
 …to then run the methods:
 ```bash
-./services/components/some_component.js fetch_data "parameter" 15 "{ \"sub-param\": \"value\" }"
+./components/some_component.js fetch_data "parameter" 15 "{ \"sub-param\": \"value\" }"
 ```
 
-The Component class will automagically look at the parameter defaults of your service's methods and try to parse parameters passed through the CLI accordingly. 
+The Component class will automagically look at the parameter defaults of your component's methods and try to parse parameters passed through the CLI accordingly. 
 
 Consider the following example component:
 ```javascript
@@ -93,7 +91,7 @@ module.exports = { RecipeFetcher };
 ```
 We pass the following arguments via CLI:
 ```bash
-./services/components/recipe_fetcher.py get_ingredients "Onion Soup" 15 false "{ \"pepper\": false }"
+./components/recipe_fetcher.py get_ingredients "Onion Soup" 15 false "{ \"pepper\": false }"
 ```
 
 The component class will automatically parse 15, false, and the passed JSON string as JSON and use the true datatypes.
@@ -102,20 +100,20 @@ The component class will automatically parse 15, false, and the passed JSON stri
 You can pass named arguments by prefixing the parameter names with two hyphens instead:
 
 ```bash
-/services/components/recipe_fetcher.py get_ingredients --ingredient_name "Mangosteen" --normalize=1
+/components/recipe_fetcher.py get_ingredients --ingredient_name "Mangosteen" --normalize=1
 ```
 
 Properties for the component class can be passed the same way. Arguments that don't match method names will be applied as properties. Any hyphens will be replaced by underscores, meaning `--user-id` will be read as `user_id`.
 
 ```bash 
-/services/components/recipe_fetcher.py get_ingredients --user-id=1337 --ingredient_name="Capers"
+/components/recipe_fetcher.py get_ingredients --user-id=1337 --ingredient_name="Capers"
 ``` 
 
 #### Method Chaining
 Methods can be chained using the chain notation (beware that spacing is crucial):
 
 ```bash
-/services/components/recipe_fetcher.py [ load_ingredients "all" , get_ingredients "Pepper" 12 ]
+/components/recipe_fetcher.py [ load_ingredients "all" , get_ingredients "Pepper" 12 ]
 ```
 will first run ```RecipeFetcher.load_ingredients("all")```, then ```RecipeFetcher.get_ingredients("Pepper", 12)``` and return a dictionary of results for each execution.
 
@@ -186,16 +184,16 @@ new_recipe = RecipeFetcher.trigger('recipe_outdated', [old_recipe])
 ### Properties
 You can access non-callable properties from the CLI using the component module's built-in get and set methods in your terminal:
 ```bash
-./services/components/recipe_fetcher.py get counts 	# returns 1
+./components/recipe_fetcher.py get counts 	# returns 1
 ```
 ```bash
-./services/components/recipe_fetcher.py set counts 3
+./components/recipe_fetcher.py set counts 3
 ```
 
 ----------
 ### Shortcuts
-All components automatically get a `help` method, so if uncertain about properties run `./services/components/recipe_fetcher.py help`.
-All methods automatically get a `--help` directive, so if uncertain about parameters run `./services/components/recipe_fetcher.py get_ingredients --help`.
+All components automatically get a `help` method, so if uncertain about properties run `./components/recipe_fetcher.py help`.
+All methods automatically get a `--help` directive, so if uncertain about parameters run `./components/recipe_fetcher.py get_ingredients --help`.
 
 ### Integration
 You can call components written in Javascript from Python and vice-versa as if they were written in the same language using the `Component` module.
@@ -206,7 +204,7 @@ Our previous _RecipeFetcher_ example was written in Javascript, but now we want 
 ```javascript
 const { Component } = require('./utils/classes/component');
 
-const { RecipeFetcher } = Component('./services/components/recipe_fetcher.py').from_cli();
+const { RecipeFetcher } = Component('./components/recipe_fetcher.py').from_cli();
 let ingredients = RecipeFetcher.get_ingredients("Onion Soup", 15, false, { pepper: false });
 
 ```
@@ -214,7 +212,7 @@ let ingredients = RecipeFetcher.get_ingredients("Onion Soup", 15, false, { peppe
 ```python
 from utils.classes.Component import Component
 
-RecipeFetcher = Component('./services/components/recipe_fetcher.js').from_cli()
+RecipeFetcher = Component('./components/recipe_fetcher.js').from_cli()
 ingredients = RecipeFetcher.get_ingredients("Onion Soup", 15, False, { "pepper": False })
 
 ```
@@ -225,7 +223,7 @@ To access properties, use the built-in property getters and setters (see "Proper
 ```javascript
 const { Component } = require('./utils/classes/component');
 
-RecipeFetcher = Component('./services/components/recipe_fetcher.py');
+RecipeFetcher = Component('./components/recipe_fetcher.py');
 const counts = RecipeFetcher.get("counts");
 
 ```
@@ -233,7 +231,7 @@ const counts = RecipeFetcher.get("counts");
 ```python
 from utils.classes.Component import Component
 
-RecipeFetcher = Component('./services/components/recipe_fetcher.js')
+RecipeFetcher = Component('./components/recipe_fetcher.js')
 counts = RecipeFetcher.get("counts")
 
 ```
