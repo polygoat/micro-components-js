@@ -1,0 +1,15 @@
+#!/usr/bin/env node
+
+const { Config } = require('../../utils/classes/Config');
+const { Component } = require('../../utils/classes/Component');
+
+Config.set_project_root('<%= cwd %>');
+const CONFIG = new Config('config/micro-pipeline.json').load();
+
+const <%= class_name %> = new Component({
+	name: '<%= name %>',
+	
+	hello_world: (user_input) => user_input
+});
+
+module.exports = { <%= class_name %> };
