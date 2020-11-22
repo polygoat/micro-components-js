@@ -2,9 +2,8 @@
 
 const _ = require('lodash');
 const md5 = require('md5');
-const path = require('path');
-const { JsonStore } = require('../classes/JsonStore');
 const { as_json } = require('../jsons');
+const { JsonStore } = require('../classes/JsonStore');
 
 class Cache extends JsonStore {
 	constructor(path) {

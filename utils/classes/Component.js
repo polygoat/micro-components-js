@@ -298,7 +298,7 @@ class ComponentCLIProp extends Function {
 		const command = [`./${this.parent.path}`, this.prop_name, ...params];
 
 		if(this.parent.is_cached) {
-			return this.parent.cache.fetch(command, () => shell_run(command));
+			return this.parent.cache.fetch(command, () => string_to_any(shell_run(command)));
 		}
 
 		let result = shell_run(command);
@@ -311,9 +311,10 @@ class ComponentCLI extends Hookable {
 	constructor(name, options={}) {
 		super();
 		this.path = name;
-		const engine = ENGINES[path.extname(this.path).slice(1)];
 
+		const engine = ENGINES[path.extname(this.path).slice(1)];
 		name = path.basename(name).replace(/\.[^\.]+$/, '');
+
 		this.name = name;
 		this.engine = engine;
 		this.__component = new Component({ name, engine });
