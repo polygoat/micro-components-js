@@ -25,7 +25,7 @@ The beauty of this is that components have a simple JSON interface to talk to ea
 In your terminal run:
 
 ```bash
-$ npm i micro-components
+$ npm i micro-components-js
 ```
 
 ## Usage
@@ -33,7 +33,7 @@ $ npm i micro-components
 To run a component from the terminal, you need the following structure at minimum:
 
 ```javascript
-const { Component } = require('micro-components');
+const { Component } = require('micro-components-js');
 
 const TaskRunner = Component({
 	name: 'task_runner',
@@ -83,7 +83,7 @@ TaskLogger.export_to_cli()
 We can now use TaskLogger from within our task_runner**.js** code:
 
 ```javascript
-const { Component } = require('micro-components');
+const { Component } = require('micro-components-js');
 const { TaskLogger } = Component.from_cli('./task_logger.py');
 
 const TaskRunner = Component({
@@ -112,7 +112,7 @@ This will create a skeleton component file in your current directory.
 Components have a snake_cased filename and hold the same name as a property at minimum:
 
 ```javascript
-const { Component } = require('micro-components');
+const { Component } = require('micro-components-js');
 
 const SomeComponent = Component({
 	name: 'some_component'
@@ -270,7 +270,7 @@ You can call components written in Javascript from Python and vice-versa as if t
 Our previous _RecipeFetcher_ example was written in Javascript, but now we want to use it in Python. Here's how:
 
 ```javascript
-const { Component } = require('micro-components');
+const { Component } = require('micro-components-js');
 
 const { RecipeFetcher } = Component('./components/re cipe_fetcher.py').from_cli();
 let ingredients = RecipeFetcher.get_ingredients("Onion Soup", 15, false, { pepper: false });
@@ -280,7 +280,7 @@ let ingredients = RecipeFetcher.get_ingredients("Onion Soup", 15, false, { peppe
 To access properties, use the built-in property getters and setters (see "Properties"), like so:
 
 ```javascript
-const { Component } = require('micro-components');
+const { Component } = require('micro-components-js');
 
 RecipeFetcher = Component.from_cli('./components/recipe_fetcher.py');
 const counts = RecipeFetcher.get("counts");

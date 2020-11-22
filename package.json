@@ -1,5 +1,5 @@
 {
-  "name": "micro-components",
+  "name": "micro-components-js",
   "version": "0.1.0",
   "description": "Lightweight library to create components that can automagically be used as either CLI or classes in other programming languages",
   "main": "index.js",
