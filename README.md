@@ -279,3 +279,9 @@ RecipeFetcher = Component.from_cli('./components/recipe_fetcher.py');
 const counts = RecipeFetcher.get("counts");
 
 ```
+
+## Examples
+
+Checkout the [components folder][] in the repo for some examples. The CLI used to create component templates for example is a component itself.
+
+[components folder]: https://github.com/polygoat/micro-components-js/tree/main/components
