@@ -1,7 +1,7 @@
 Micro Components for NodeJS
 ===========================
 
-Lightweight library to create components that can automagically be used as either CLI or classes in other programming languages
+Lightweight library to create components that can automagically be used as either CLI or as native classes in other programming languages
 
 ## Goals & Design
 
