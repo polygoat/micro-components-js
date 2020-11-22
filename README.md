@@ -5,9 +5,10 @@ Lightweight library to create components that can automagically be used as eithe
 
 ## Goals & Design
 
+Often times, which programming language I pick is predetermined by technical requirements and the resources available in that language. In many cases I have to use a mixture of nodejs, Python, and bash scripts, and they all have to talk to each other.
 The intent of this library is to provide a utility class turning [Singleton classes][] into command line interfaces and providing an intuitive class interface between different programming languages. Since a lot of the code I produce is either Node or Python, I started by creating components for those two languages.
 
-As every component returns JSON data, other components can read from it as if it was code native to their programming language.
+The beauty of this is that components have a simple JSON interface to talk to each other, irregardless of the programming language. Any other language implementing the Component interface can now be imported as if it were a native class.
 
 [Singleton classes]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/static
 
@@ -52,7 +53,6 @@ $ taskrunner.js run --task-id="hello world"
 $ taskrunner.js run --task-id="[5,9,true]"
 # output: { "task_id": [5, 9, true], "status": "running"  }
 ```
-The beauty of this is that components have a simple interface to talk to each other, irregardless of the programming language. Any other language implementing the Component interface can now be imported as if it were a native class.
 
 **Example of Python and Node components interacting:**
 
