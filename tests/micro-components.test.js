@@ -8,7 +8,6 @@ const { Component } = require('../utils/classes/Component');
 describe('Component JS class', () => {
 	test('Component class instantiation', () => {
 		const { Builder } = require('../components/builder');
-		console.log('Builder.create', Builder.create, get_datatype(Builder.create));
 		expect(get_datatype(Builder.create)).toBe('Function');
 	});
 
@@ -63,6 +62,6 @@ describe('Component Builder', () => {
 		expect(MyComponent instanceof Component).toBe(true);
 		expect(MyComponent.name).toBe('my_component');
 
-		fs.unlinkSync('../my_component');
+		fs.unlinkSync('./my_component');
 	});
 });
