@@ -38,6 +38,7 @@ describe('Component interaction', () => {
 		fs.writeFileSync('./broker.sh', `echo '{ "hello": "world" }'`);
 		fs.chmodSync('./broker.sh', '755');
 
+		js_lines[2] = js_lines[2].replace('micro-components-js', './')
 		js_lines.splice(3, 0, "const { Broker } = Component.from_cli('./broker.sh');");
 		js_lines.splice(8, 0, '\trun: key => Broker.anything()[key],');
 
