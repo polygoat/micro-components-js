@@ -6,6 +6,7 @@ Lightweight library to create components that can automagically be used as eithe
 ## Goals & Design
 
 Often times, which programming language I pick is predetermined by technical requirements and the resources available in that language. In many cases I have to use a mixture of nodejs, Python, and bash scripts, and they all have to talk to each other.
+
 The intent of this library is to provide a utility class turning [Singleton classes][] into command line interfaces and providing an intuitive class interface between different programming languages. Since a lot of the code I produce is either Node or Python, I started by creating components for those two languages.
 
 The beauty of this is that components have a simple JSON interface to talk to each other, irregardless of the programming language. Any other language implementing the Component interface can now be imported as if it were a native class.
