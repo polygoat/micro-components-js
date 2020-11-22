@@ -8,9 +8,9 @@ const shlex_join = parts => {
 };
 
 const shell_run = script => {
-	const result = execSync(shlex_join(script)).toString().replace(/^\n+|\n+$/g, '');
+	const result = execSync(shlex_join(script)).toString().replace(/^[\n\s]+|[\n\s]+$/g, '');
 	try {
-		return JSON.parse(result);
+		return JSON.parse(result).trim();
 	} catch(e) {
 		return result;
 	}

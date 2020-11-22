@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { Component } = require('../../utils/classes/Component');
+const { Component } = require('./utils/classes/Component');
 
 const <%= class_name %> = new Component({
 	name: '<%= name %>',
@@ -8,6 +8,5 @@ const <%= class_name %> = new Component({
 	hello_world: (user_input) => user_input
 });
 
-<%= class_name %>
-	.export_as_cli()
-	.export_as_(module);
+<%= class_name %>.export_as_cli()
+<%= class_name %>.export_as_(module);

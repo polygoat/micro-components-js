@@ -38,8 +38,9 @@ const Builder = new Component({
 		fs.writeFileSync(file_path, file);
 		fs.chmodSync(file_path, '755');
 
-		console.log(' Component created.'.green + ' Try it by running ' + './${file_path} help'.yellow);
+		console.log(' Component created.'.green + ' Try it by running ' + `${file_path} help`.yellow);
 	}
 });
 
 Builder.export_as_cli();
+Builder.export_as_(module);

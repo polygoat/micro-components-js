@@ -254,14 +254,17 @@ class Component extends Hookable {
 		return this;
 	}
 
-	export_as(module) {
-		module.export[this.name] = this;
+	export_as_(parent_module) {
+		if(!_.has(parent_module, 'exports')) {
+			parent_module.exports = {};
+		}
+		parent_module.exports[this.get_classname()] = this;
 		return this;
 	}
 
-	export() {
+	export(module) {
 		this.export_as_cli();
-		this.export_as_module();
+		this.export_as_(module);
 		return this;
 	}
 }
@@ -297,7 +300,10 @@ class ComponentCLIProp extends Function {
 		if(this.parent.is_cached) {
 			return this.parent.cache.fetch(command, () => shell_run(command));
 		}
-		return shell_run(command);
+
+		let result = shell_run(command);
+		result = string_to_any(result);
+		return result;
 	}
 }
 
