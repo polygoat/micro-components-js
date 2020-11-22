@@ -1,22 +1,47 @@
-Micro Pipeline: Components
-==========================
+Micro Components for NodeJS
+===========================
+
+Lightweight library to create components that can automagically be used as either CLI or classes in other programming languages
+
+## Goals & Design
+
+The intent of this library is to provide a utility class turning [Singleton classes][] into command line interfaces and providing an intuitive class interface between different programming languages. Since a lot of the code I produce is either Node or Python, I started by creating components for those two languages.
+
+As every component returns JSON data, other components can read from it as if it was code native to their programming language.
+
+[Singleton classes]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/static
 
 ## Installation
 
 In your terminal run:
 
 ```bash
-npm i micro-components
+$ npm i micro-components
 ```
 
 ## Usage
 
-## Creation from CLI
-You can use the `micro-component` CLI to create a component like so:
+To run a component from the terminal, you need the following structure at minimum:
 
-**For Javascript:**
+```javascript
+const { Component } = require('micro-components');
+
+const TaskRunner = Component({
+	name: 'task_runner',
+
+	run(task_id) {
+		return { task_id, status: 'running' };
+	}
+
+}).export_as_cli();
+```
+
+## Creation from Terminal
+You can use the `micro-components` CLI to create a component like so:
+
+**In your terminal:**
 ```bash
-micro-pipeline create "My Component" node
+micro-components create "My Component"
 ```
 
 This will create a skeleton component file in your current directory.
@@ -24,19 +49,16 @@ This will create a skeleton component file in your current directory.
 ## Naming Convention
 Components have a snake_cased filename and hold the same name as a property at minimum:
 
-**Javascript:**
 ```javascript
-const { Component } = require('../../utils/classes/Component');
+const { Component } = require('micro-components');
 
 const SomeComponent = Component({
 	name: 'some_component'
 });
 ```
 
-
 Class names follow usual conventions of StarCase.
 
-**Javascript:**
 ```javascript
 const { IntentMatcher } = require('./components/intent_matcher');
 ```
@@ -46,12 +68,13 @@ You can use one of two export methods to either import components as modules "in
 
 ### As Modules
 To turn a component into a requirable module in NodeJS, use:
-`SomeComponent.export_as(module);`
+```javascript
+SomeComponent.export_as_(module);
+```
 
 ### As CLI
-To turn a component into a CLI, use the command `export_as_cli`:
+To turn a component into a CLI, use the command `export_as_cli()`:
 
-**Javascript:**
 ```javascript
 SomeComponent.export_as_cli();
 ```
@@ -87,7 +110,7 @@ const RecipeFetcher = new Component({
 });
 
 RecipeFetcher.export_as_cli();
-module.exports = { RecipeFetcher };
+RecipeFetcher.export_as_(module);
 ```
 We pass the following arguments via CLI:
 ```bash
@@ -118,24 +141,14 @@ Methods can be chained using the chain notation (beware that spacing is crucial)
 will first run ```RecipeFetcher.load_ingredients("all")```, then ```RecipeFetcher.get_ingredients("Pepper", 12)``` and return a dictionary of results for each execution.
 
 ### Caching
-To cache individual methods in **JavaScript**, use the `cached_methods` property array:
+Before using any of the built-in caching functionality, make sure you have a directory called `data/caches` to store those in.
+To cache individual methods, use the `cached_methods` property array:
 
 ```javascript
 	const RecipeFetcher = new Component({
 		name: 'recipe_fetcher',
 		cached_methods: ['heavy_computational_task'],
 		...
-```
-
-To cache individual methods in **Python**, you can use a `cached` decorator:
-
-```python
-	from utils.classes.Cache import cached
-
-	class RecipeFetcher(Component):
-		@cached
-		def heavy_computational_task():
-			...
 ```
 
 A JSON cache will be auto-generated in `/data/caches/<component_name>.cache.json`.
@@ -146,14 +159,8 @@ Components provide the following interface:
 ### Events
 Components and utility classes all emit events that can be listened to. You can attach event listeners using the `on` method.
 
-**JavaScript:**
 ```javascript
 RecipeFetcher.on('spawn', (self) => console.log('RecipeFetcher loaded.'));
-```
-
-**Python:**
-```python
-RecipeFetcher.on('spawn', lambda self: print('RecipeFetcher loaded.'))
 ```
 
 The following events are available on every component:
@@ -167,15 +174,15 @@ The following events are available on every component:
 
 To _trigger_ (e.g. your own) events, use the `trigger` method:
 
-```python
-RecipeFetcher.trigger('recipe_outdated', ['some', 'arguments'])
+```javascript
+RecipeFetcher.trigger('recipe_outdated', ['some', 'arguments']);
 
 ```
 
 If the event handler returned something, it will be passed through trigger as return value.
 
-```python
-new_recipe = RecipeFetcher.trigger('recipe_outdated', [old_recipe])
+```javascript
+const new_recipe = RecipeFetcher.trigger('recipe_outdated', [old_recipe]);
 
 ```
 
@@ -200,38 +207,20 @@ You can call components written in Javascript from Python and vice-versa as if t
 
 Our previous _RecipeFetcher_ example was written in Javascript, but now we want to use it in Python. Here's how:
 
-**Javascript:**
 ```javascript
-const { Component } = require('./utils/classes/component');
+const { Component } = require('micro-components');
 
-const { RecipeFetcher } = Component('./components/recipe_fetcher.py').from_cli();
+const { RecipeFetcher } = Component('./components/re cipe_fetcher.py').from_cli();
 let ingredients = RecipeFetcher.get_ingredients("Onion Soup", 15, false, { pepper: false });
-
-```
-**Python:**
-```python
-from utils.classes.Component import Component
-
-RecipeFetcher = Component('./components/recipe_fetcher.js').from_cli()
-ingredients = RecipeFetcher.get_ingredients("Onion Soup", 15, False, { "pepper": False })
 
 ```
 
 To access properties, use the built-in property getters and setters (see "Properties"), like so:
 
-**Javascript:**
 ```javascript
-const { Component } = require('./utils/classes/component');
+const { Component } = require('micro-components');
 
-RecipeFetcher = Component('./components/recipe_fetcher.py');
+RecipeFetcher = Component.from_cli('./components/recipe_fetcher.py');
 const counts = RecipeFetcher.get("counts");
-
-```
-**Python:**
-```python
-from utils.classes.Component import Component
-
-RecipeFetcher = Component('./components/recipe_fetcher.js')
-counts = RecipeFetcher.get("counts")
 
 ```

@@ -24,7 +24,7 @@ const has_named_args = args => /(^| )\-\-\w+/g.test(args.join(' '));
 class Component extends Hookable {
 	name = ''
 	engine = 'node'
-	from_cli = false
+	called_from_cli = false
 
 	static registered = []
 
@@ -97,7 +97,7 @@ class Component extends Hookable {
 	}
 
 	help() {
-		const component_props = ['name', 'hooks', 'from_cli', ...Object.getOwnPropertyNames(Component.prototype)];
+		const component_props = ['name', 'hooks', 'called_from_cli', ...Object.getOwnPropertyNames(Component.prototype)];
 
 		let callables = [];
 		let props = [];
@@ -223,7 +223,7 @@ class Component extends Hookable {
 				} else {					
 					args = _.map(args, string_to_any);
 
-					this.from_cli = true;
+					this.called_from_cli = true;
 					method.as_cli = true;
 					result = await this[command](...args);
 				}
@@ -262,6 +262,7 @@ class Component extends Hookable {
 	export() {
 		this.export_as_cli();
 		this.export_as_module();
+		return this;
 	}
 }
 
