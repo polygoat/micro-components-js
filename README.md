@@ -36,6 +36,60 @@ const TaskRunner = Component({
 }).export_as_cli();
 ```
 
+To then be able to run one of the following commands from your terminal:
+
+```bash
+$ taskrunner.js run 95
+# output: { "task_id": 95, "status": "running"  }
+```
+
+```bash
+$ taskrunner.js run --task-id="hello world"
+# output: { "task_id": "hello world", "status": "running"  }
+```
+
+```bash
+$ taskrunner.js run --task-id="[5,9,true]"
+# output: { "task_id": [5, 9, true], "status": "running"  }
+```
+The beauty of this is that components have a simple interface to talk to each other, irregardless of the programming language. Any other language implementing the Component interface can now be imported as if it were a native class.
+
+**Example of Python and Node components interacting:**
+
+_Consider this Python component called `task_logger.py`:_
+
+```python
+from micro_components import Component
+
+class TaskLogger(Component):
+	name: 'task_logger',
+
+	@staticmethod
+	def log(infos):
+		with open('log.json', 'w') as log_file:
+			log_file.write(infos)
+
+TaskLogger.export_to_cli()
+```
+
+We can now use TaskLogger from within our task_runner**.js** code:
+
+```javascript
+const { Component } = require('micro-components');
+const { TaskLogger } = Component.from_cli('./task_logger.py');
+
+const TaskRunner = Component({
+	name: 'task_runner',
+
+	run(task_id) {
+		const result = { task_id, status: 'running' };
+		TaskLogger.log(result);
+		return result;
+	}
+
+}).export_as_cli();
+```
+
 ## Creation from Terminal
 You can use the `micro-components` CLI to create a component like so:
 
