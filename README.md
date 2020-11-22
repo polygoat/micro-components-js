@@ -3,6 +3,13 @@ Micro Components for NodeJS
 
 Lightweight library to create components that can automagically be used as either CLI or as native classes in other programming languages
 
+[![npm][npm-badge]][npm] [![npm][travis-badge]][npm]
+
+
+[npm]: https://www.npmjs.org/package/micro-components
+[npm-badge]: https://img.shields.io/npm/v/micro-components.svg?style=flat-square
+[travis-badge]: https://travis-ci.com/polygoat/micro-components-js.svg?token=Lq7sM5SEXeYPspCGGGdD&branch=main
+
 ## Goals & Design
 
 Often times, which programming language I pick is predetermined by technical requirements and the resources available in that language. In many cases I have to use a mixture of nodejs, Python, and bash scripts, and they all have to talk to each other.
