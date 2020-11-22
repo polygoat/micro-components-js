@@ -53,15 +53,13 @@ describe('Component interaction', () => {
 
 describe('Component Builder', () => {
 	test('Component creation', () => {
-		const component_name = "My Component";
-
-		const result = shell_run(['micro-components', 'create', component_name, '--color=false']);
+		const result = shell_run(['micro-components', 'create', "My Component", '--color=false']);
 		expect(result).toBe('Component created. Try it by running ./my_component.js help');
 
 		const { MyComponent } = require('../my_component');
 		expect(MyComponent instanceof Component).toBe(true);
 		expect(MyComponent.name).toBe('my_component');
 
-		fs.unlinkSync('./my_component');
+		fs.unlinkSync('./my_component.js');
 	});
 });
