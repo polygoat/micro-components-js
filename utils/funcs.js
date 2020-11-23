@@ -27,7 +27,7 @@ const named_args_as_positional = (args, inspection, service_name, method_name) =
 	const argparse = require('argparse');
 	const arg_list = inspection.parametersNames.join('> <');
 	let description = _.startCase(service_name) + ` Component: ${method_name} <${arg_list}>`;
-	const args_parser = new argparse.ArgumentParser({ usage: `./services/${service_name}.js ${method_name}`, description });
+	const args_parser = new argparse.ArgumentParser({ usage: `./${service_name}.js ${method_name}`, description });
 	
 	_.each(inspection.parameters, definition => {
 		const options = { nargs: '?' };
