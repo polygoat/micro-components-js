@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+require('colors');
 const _ = require('lodash');
 const path = require('path');
 
@@ -117,7 +118,6 @@ class Component extends Hookable {
 						if(_.isUndefined(param.defaultValue)) {
 							return param.parameter;
 						}
-						//return `${param.parameter}=${param.defaultValue}`;
 						return param.parameter + `=${param.defaultValue}`.grey;
 					});
 					entry['params'] = params.join(', ');
