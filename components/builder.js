@@ -20,6 +20,7 @@ const ENDINGS = {
 
 const Builder = new Component({
 	name: 'builder',
+	version: '1.0.0',
 
 	create(component_name, coding_language='node') {
 		const data = {
