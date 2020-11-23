@@ -29,7 +29,7 @@ const Builder = new Component({
 		};
 		coding_language = _.get(MAPPING, coding_language, coding_language);
 
-		const render = _.template(fs.readFileSync(`./${coding_language}.component`).toString());
+		const render = _.template(fs.readFileSync(__dirname + `/../${coding_language}.component`).toString());
 		let file = render(data);
 
 		const file_ending = ENDINGS[coding_language];
