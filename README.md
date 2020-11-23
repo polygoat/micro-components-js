@@ -28,6 +28,12 @@ In your terminal run:
 $ npm i micro-components-js
 ```
 
+To install the CLI, run:
+
+```bash
+$ npm link micro-components-js
+```
+
 ## Usage
 
 To run a component from the terminal, you need the following structure at minimum:
