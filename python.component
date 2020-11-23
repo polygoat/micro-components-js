@@ -1,0 +1,12 @@
+#!/usr/bin/env python3
+
+from micro_components import Component
+
+class <%= class_name %>(Component):
+	name = '<%= name %>'
+
+	@staticmethod
+	def hello_world(user_input):
+		return user_input
+
+<%= class_name %>.export_as_cli()
