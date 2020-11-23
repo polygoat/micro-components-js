@@ -213,6 +213,7 @@ class Component extends Hookable {
 				if(has_named_args(args)) {
 					const named = named_args_as_positional(args, method_inspection, this.name, command);
 					args = named.args;
+					named.properties = _.mapValues(named.properties, string_to_any);
 					await this.init(named.properties);
 				}
 
@@ -295,7 +296,7 @@ class ComponentCLIProp extends Function {
 			return param;
 		});
 
-		const command = [`./${this.parent.path}`, this.prop_name, ...params];
+		const command = [this.parent.path, this.prop_name, ...params];
 
 		if(this.parent.is_cached) {
 			return this.parent.cache.fetch(command, () => string_to_any(shell_run(command)));
