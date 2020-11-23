@@ -5,10 +5,13 @@ Lightweight library to create components that can automagically be used as eithe
 
 [![npm][npm-badge]][npm] [![npm][travis-badge]][npm]
 
+This library exists for Python, too.
+[Take a look here][] if you need interaction between Node and Python components! 
 
 [npm]: https://www.npmjs.org/package/micro-components
 [npm-badge]: https://img.shields.io/npm/v/micro-components.svg?style=flat-square
 [travis-badge]: https://travis-ci.com/polygoat/micro-components-js.svg?token=Lq7sM5SEXeYPspCGGGdD&branch=main
+[Take a look here]: https://github.com/polygoat/micro-components-py
 
 ## Goals & Design
 
