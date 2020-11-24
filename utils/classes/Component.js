@@ -299,7 +299,8 @@ class ComponentCLIProp extends Function {
 		const command = [this.parent.path, this.prop_name, ...params];
 
 		if(this.parent.is_cached) {
-			return this.parent.cache.fetch(command, () => string_to_any(shell_run(command)));
+			const cache_key = this.parent.trigger('create_cache_key', [command]) || command;
+			return this.parent.cache.fetch(cache_key, () => string_to_any(shell_run(command)));
 		}
 
 		let result = shell_run(command);
