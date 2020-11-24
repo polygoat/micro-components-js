@@ -5,7 +5,7 @@ Lightweight library to create components that can automagically be used as eithe
 
 [![npm][npm-badge]][npm] [![npm][travis-badge]][npm]
 
-[npm]: https://www.npmjs.org/package/micro-components
+[npm]: https://www.npmjs.org/package/micro-components-js
 [npm-badge]: https://img.shields.io/npm/v/micro-components.svg?style=flat-square
 [travis-badge]: https://travis-ci.com/polygoat/micro-components-js.svg?token=Lq7sM5SEXeYPspCGGGdD&branch=main
 
