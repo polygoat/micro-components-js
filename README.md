@@ -314,3 +314,10 @@ $ npm test
 Checkout the [components folder][] in the repo for some examples. The CLI used to create component templates for example is a component itself.
 
 [components folder]: https://github.com/polygoat/micro-components-js/tree/main/components
+
+
+License
+-------
+[MIT License][]
+
+[MIT License]: https://github.com/polygoat/micro-components-js/blob/main/LICENSE
