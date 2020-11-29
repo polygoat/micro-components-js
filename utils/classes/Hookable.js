@@ -2,19 +2,25 @@ class Hookable {
 	hooks = {}
 
 	static on(event_label, method) {
-		Hookable.hooks[event_label] = method;
+		if(!(event_label in Hookable.hooks)) {
+			Hookable.hooks[event_label] = [];
+		}
+		Hookable.hooks[event_label].push(method);
 	}
 
 	on(event_label, method) {
 		if(!this.hooks) {
 			Object.defineProperty(this, 'hooks', {
-				value: { [event_label]: method },
+				value: { [event_label]: [method] },
 				configurable: false,
 				enumerable: false,
 				writable: true
 			});
 		} else {
-			this.hooks[event_label] = method;
+			if(!(event_label in Hookable.hooks)) {
+				this.hooks[event_label] = [];
+			}
+			this.hooks[event_label].push(method);
 		}
 	}
 
@@ -24,7 +30,12 @@ class Hookable {
 		}
 
 		if(event_label in Hookable.hooks) {
-			return Hookable.hooks[event_label](...parameters);
+			let result;
+			Hookable.hooks[event_label].forEach((method) => {
+				result = method(...parameters);
+				parameters[0] = result;
+			});
+			return result;
 		}
 		return fallback;
 	}
@@ -35,7 +46,12 @@ class Hookable {
 		}
 
 		if(event_label in (this.hooks || {})) {
-			return this.hooks[event_label](...parameters);
+			let result;
+			this.hooks[event_label].forEach((method) => {
+				result = method(...parameters);
+				parameters[0] = result;
+			});
+			return result;
 		}
 		return fallback;
 	}

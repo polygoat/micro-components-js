@@ -50,10 +50,6 @@ class Component extends Hookable {
 		return this.trigger('spawn', [this], this);
 	}
 
-	static from_cli(path, extras=undefined) {
-		return new ComponentCLI(path, extras);
-	}
-
 	async init(options) {
 		if(_.isString(options)) {
 			options = JSON.parse(options);
@@ -64,6 +60,10 @@ class Component extends Hookable {
 		this.trigger('init', [this, options]);
 
 		return this;
+	}
+
+	static from_cli(path, extras=undefined) {
+		return new ComponentCLI(path, extras);
 	}
 
 	init_cache() {
@@ -103,10 +103,12 @@ class Component extends Hookable {
 		let callables = [];
 		let props = [];
 
-		let dir = Object.getOwnPropertyNames(this);
-		dir = _.without(dir, ...component_props);
+		let properties = Object.getOwnPropertyNames(this);
+		properties = _.without(properties, ...component_props);
 
-		_.each(dir, prop => {
+		properties = Component.trigger('help', [properties], properties);
+
+		_.each(properties, prop => {
 			if(!prop.startsWith('on_')) {				
 				let attribute = this[prop];
 				const entry = { name: prop };
@@ -243,7 +245,7 @@ class Component extends Hookable {
 	}
 
 	async export_as_cli() {
-		const name = path.basename(require.main.filename).replace(/\.js$/g, '');
+		const name = path.basename(require.main.filename).replace(/\.js$/g, '').toLowerCase();
 		const is_imported = name !== this.name;
 
 		if(!is_imported) {
@@ -281,11 +283,9 @@ class ComponentCLIProp extends Function {
 		return self;
 	}
 
-	get() {
-		const param = this.prop_name + ''
-		this.prop_name = 'get';
-		this.value = this.__call__(param);
-		return String(this.value);
+	async communicate(command) {
+		let result = await this.parent.__service.send_command(...command);
+		return string_to_any(result);
 	}
 
 	__call__(...params) {
@@ -341,4 +341,4 @@ class ComponentCLI extends Hookable {
 	}
 }
 
-module.exports = { Component };
+module.exports = { Component, ComponentCLI, ComponentCLIProp };
