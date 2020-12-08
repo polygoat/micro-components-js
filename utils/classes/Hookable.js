@@ -17,7 +17,7 @@ class Hookable {
 				writable: true
 			});
 		} else {
-			if(!(event_label in Hookable.hooks)) {
+			if(!(event_label in this.hooks)) {
 				this.hooks[event_label] = [];
 			}
 			this.hooks[event_label].push(method);

@@ -1,3 +1,1 @@
-const { Component } = require('./utils/classes/Component');
-
-module.exports = { Component };
+module.exports = require('./utils/classes/Component');
