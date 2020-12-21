@@ -284,7 +284,7 @@ class ComponentCLIProp extends Function {
 	}
 
 	async communicate(command) {
-		let result = await this.parent.__service.send_command(...command);
+		let result = shell_run(command);
 		return string_to_any(result);
 	}
 
@@ -303,8 +303,7 @@ class ComponentCLIProp extends Function {
 			return this.parent.cache.fetch(cache_key, () => string_to_any(shell_run(command)));
 		}
 
-		let result = shell_run(command);
-		result = string_to_any(result);
+		let result = await this.communicate(result);
 		return result;
 	}
 }
